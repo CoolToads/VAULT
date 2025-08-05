@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Rominate Vault</title>
+<style>
+  body { background: black; color: #0f0; font-family: monospace; text-align: center; padding-top: 100px; }
+  #message { font-size: 1.5em; display: none; white-space: pre-wrap; }
+</style>
+</head>
+<body>
+<h1>Welcome to Rominate Vault</h1>
+<p>Enter the secret key combo to unlock the message.</p>
+<div id="message"></div>
+
+<script>
+// Obfuscated message - base64 encoded
+const encodedMsg = "VGhlIHRoaW5nIHdlIGRpZCB0aGF0IHdhcyBub3QgbGlzdGVkIGluIHRoZSBwb3dlcnBvaW50IHdhcyBKYWlsYnJlYWtpbmcvSGFja2luZyBDaGF0R1BUMw==";
+
+function decodeMessage(str) {
+  return atob(str);
+}
+
+const secretCombo = ['control', 'alt', 'r', 'o', 'm', 'i', 'n', 'a', 't', 'e'];
+let pressedKeys = new Set();
+
+function isDevToolsOpen() {
+  const threshold = 160;
+  let widthThreshold = window.outerWidth - window.innerWidth > threshold;
+  let heightThreshold = window.outerHeight - window.innerHeight > threshold;
+  return widthThreshold || heightThreshold;
+}
+
+// Reload page if DevTools detected open (basic method)
+setInterval(() => {
+  if (isDevToolsOpen()) {
+    location.reload();
+  }
+}, 500);
+
+window.addEventListener('keydown', e => {
+  pressedKeys.add(e.key.toLowerCase());
+  
+  // Check ctrl and alt keys
+  if (e.ctrlKey) pressedKeys.add('control');
+  if (e.altKey) pressedKeys.add('alt');
+
+  // Check if secret combo pressed (all keys present)
+  if (secretCombo.every(k => pressedKeys.has(k))) {
+    const msgDiv = document.getElementById('message');
+    if (msgDiv.style.display === 'none') {
+      msgDiv.textContent = decodeMessage(encodedMsg);
+      msgDiv.style.display = 'block';
+    }
+  }
+});
+
+window.addEventListener('keyup', e => {
+  pressedKeys.delete(e.key.toLowerCase());
+  if (!e.ctrlKey) pressedKeys.delete('control');
+  if (!e.altKey) pressedKeys.delete('alt');
+});
+</script>
+</body>
+</html>
