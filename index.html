@@ -3,36 +3,60 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Rominate Vault</title>
+<title>Google</title>
 <style>
   body {
     margin: 0; padding: 0;
-    font-family: 'Courier New', Courier, monospace;
-    background: linear-gradient(135deg, #0a0a0a, #121212);
-    color: #00ff00;
+    font-family: Arial, sans-serif;
+    background: white;
+    color: black;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     height: 100vh;
     overflow: hidden;
-  }
-  #normalContent {
-    text-align: center;
-    max-width: 600px;
     user-select: none;
+  }
+  #fakeGoogle {
+    text-align: center;
+  }
+  #fakeGoogle img {
+    width: 272px;
+    margin-bottom: 20px;
+  }
+  #fakeGoogle input[type="text"] {
+    width: 480px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #dfe1e5;
+    border-radius: 24px;
+    outline: none;
+    box-shadow: none;
+    transition: box-shadow 0.3s;
+  }
+  #fakeGoogle input[type="text"]:focus {
+    box-shadow: 0 0 5px #4285f4;
   }
   #secretPrompt {
     display: none;
     flex-direction: column;
     align-items: center;
-    margin-top: 30px;
-    opacity: 0;
-    transition: opacity 1s ease;
+    margin-top: 20px;
+    background: #000;
+    color: #0f0;
+    font-family: 'Courier New', monospace;
+    height: 100vh;
+    width: 100vw;
+    position: fixed;
+    top: 0; left: 0;
+    justify-content: center;
+    z-index: 9999;
+    user-select: text;
   }
   #secretPrompt.visible {
     display: flex;
-    opacity: 1;
+    animation: fadeIn 1s ease forwards;
   }
   input[type="password"] {
     font-size: 1.2em;
@@ -55,7 +79,6 @@
     font-weight: bold;
     color: #000;
     transition: background 0.3s ease;
-    user-select: none;
   }
   button:hover, #linkButton:hover {
     background: #0b0;
@@ -64,20 +87,19 @@
     margin-top: 20px;
     font-size: 1.3em;
     white-space: pre-wrap;
+    text-align: center;
   }
-  #footer {
-    position: absolute;
-    bottom: 10px;
-    font-size: 0.8em;
-    color: #004400;
+  @keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity: 1;}
   }
 </style>
 </head>
 <body>
 
-<div id="normalContent">
-  <h1>Rominate</h1>
-  <p>Welcome to the site.</p>
+<div id="fakeGoogle">
+  <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" alt="Google" />
+  <input type="text" placeholder="Search Google or type a URL" />
 </div>
 
 <div id="secretPrompt">
@@ -93,7 +115,7 @@
 <script>
   const secretPassword = "ctrl+alt+rominate";
   const secretPrompt = document.getElementById("secretPrompt");
-  const normalContent = document.getElementById("normalContent");
+  const fakeGoogle = document.getElementById("fakeGoogle");
   const passwordInput = document.getElementById("passwordInput");
   const submitBtn = document.getElementById("submitBtn");
   const messageDiv = document.getElementById("message");
@@ -101,16 +123,14 @@
   const backgroundMusic = document.getElementById("backgroundMusic");
   const unlockSound = document.getElementById("unlockSound");
 
-  // Start muted, play after unlock
   backgroundMusic.volume = 0.1;
   backgroundMusic.pause();
 
-  // Show secret prompt on pressing 5 once (no hint given)
   let promptVisible = false;
   window.addEventListener("keydown", (e) => {
     if (e.key === "5" && !promptVisible) {
       promptVisible = true;
-      normalContent.style.filter = "blur(4px)";
+      fakeGoogle.style.display = "none";
       secretPrompt.classList.add("visible");
       passwordInput.focus();
     }
@@ -138,8 +158,6 @@
     window.open("https://sjschools-my.sharepoint.com/:f:/r/personal/s591445_stjohns_k12_fl_us/Documents/Rominate?csf=1&web=1&e=aZRIQX", "_blank");
   });
 </script>
-
-<div id="footer">Rominate™ — Keep it secret, keep it savage.</div>
 
 </body>
 </html>
