@@ -76,8 +76,8 @@
 <body>
 
 <div id="normalContent">
-  <h1>Welcome to Rominate</h1>
-  <p>This is a normal-looking site. Press the <strong>5</strong> key to unlock the secret.</p>
+  <h1>Rominate</h1>
+  <p>Welcome to the site.</p>
 </div>
 
 <div id="secretPrompt">
@@ -105,7 +105,7 @@
   backgroundMusic.volume = 0.1;
   backgroundMusic.pause();
 
-  // Show secret prompt on pressing 5 once
+  // Show secret prompt on pressing 5 once (no hint given)
   let promptVisible = false;
   window.addEventListener("keydown", (e) => {
     if (e.key === "5" && !promptVisible) {
