@@ -5,8 +5,35 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Rominate Vault</title>
 <style>
-  body { background: black; color: #0f0; font-family: monospace; text-align: center; padding-top: 100px; }
-  #message { font-size: 1.5em; display: none; margin-top: 20px; white-space: pre-wrap; }
+  body {
+    margin: 0; padding: 0;
+    font-family: 'Courier New', Courier, monospace;
+    background: linear-gradient(135deg, #0a0a0a, #121212);
+    color: #00ff00;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    overflow: hidden;
+  }
+  #normalContent {
+    text-align: center;
+    max-width: 600px;
+    user-select: none;
+  }
+  #secretPrompt {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 30px;
+    opacity: 0;
+    transition: opacity 1s ease;
+  }
+  #secretPrompt.visible {
+    display: flex;
+    opacity: 1;
+  }
   input[type="password"] {
     font-size: 1.2em;
     padding: 10px;
@@ -16,48 +43,103 @@
     color: #0f0;
     outline: none;
     letter-spacing: 2px;
+    margin-bottom: 15px;
   }
-  button {
-    font-size: 1.2em;
+  button, #linkButton {
+    font-size: 1.1em;
     padding: 10px 20px;
-    margin-left: 10px;
+    margin: 5px;
     background: #0f0;
     border: none;
     cursor: pointer;
     font-weight: bold;
+    color: #000;
+    transition: background 0.3s ease;
+    user-select: none;
   }
-  button:hover {
+  button:hover, #linkButton:hover {
     background: #0b0;
+  }
+  #message {
+    margin-top: 20px;
+    font-size: 1.3em;
+    white-space: pre-wrap;
+  }
+  #footer {
+    position: absolute;
+    bottom: 10px;
+    font-size: 0.8em;
+    color: #004400;
   }
 </style>
 </head>
 <body>
-<h1>Rominate Vault</h1>
-<p>Enter the secret password to unlock the message.</p>
-<input type="password" id="passwordInput" placeholder="Type the secret here" autocomplete="off" />
-<button id="submitBtn">Enter</button>
 
-<div id="message">The thing we did that was not listed in the powerpoint was Jailbreaking/Hacking ChatGPT</div>
+<div id="normalContent">
+  <h1>Welcome to Rominate</h1>
+  <p>This is a normal-looking site. Press the <strong>5</strong> key to unlock the secret.</p>
+</div>
+
+<div id="secretPrompt">
+  <input type="password" id="passwordInput" placeholder="Enter the secret password" autocomplete="off" />
+  <button id="submitBtn">Unlock</button>
+  <div id="message" style="display:none;">The thing we did that was not listed in the powerpoint was Jailbreaking/Hacking ChatGPT</div>
+  <button id="linkButton" style="display:none;">Open Rominate Vault</button>
+</div>
+
+<audio id="backgroundMusic" src="https://cdn.pixabay.com/download/audio/2021/10/26/audio_65c2b41f00.mp3?filename=tech-background-ambient-11639.mp3" loop></audio>
+<audio id="unlockSound" src="https://cdn.pixabay.com/download/audio/2021/09/16/audio_316b86ef35.mp3?filename=success-fanfare-6100.mp3"></audio>
 
 <script>
-  const password = "ctrl+alt+rominate";
+  const secretPassword = "ctrl+alt+rominate";
+  const secretPrompt = document.getElementById("secretPrompt");
+  const normalContent = document.getElementById("normalContent");
+  const passwordInput = document.getElementById("passwordInput");
+  const submitBtn = document.getElementById("submitBtn");
+  const messageDiv = document.getElementById("message");
+  const linkButton = document.getElementById("linkButton");
+  const backgroundMusic = document.getElementById("backgroundMusic");
+  const unlockSound = document.getElementById("unlockSound");
 
-  document.getElementById("submitBtn").addEventListener("click", () => {
-    const input = document.getElementById("passwordInput").value.toLowerCase().trim();
-    if (input === password) {
-      document.getElementById("message").style.display = "block";
+  // Start muted, play after unlock
+  backgroundMusic.volume = 0.1;
+  backgroundMusic.pause();
+
+  // Show secret prompt on pressing 5 once
+  let promptVisible = false;
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "5" && !promptVisible) {
+      promptVisible = true;
+      normalContent.style.filter = "blur(4px)";
+      secretPrompt.classList.add("visible");
+      passwordInput.focus();
+    }
+  });
+
+  submitBtn.addEventListener("click", () => {
+    const inputVal = passwordInput.value.toLowerCase().trim();
+    if (inputVal === secretPassword) {
+      messageDiv.style.display = "block";
+      linkButton.style.display = "inline-block";
+      unlockSound.play();
+      backgroundMusic.play();
     } else {
       alert("Wrong password. Try again.");
-      document.getElementById("message").style.display = "none";
+      messageDiv.style.display = "none";
+      linkButton.style.display = "none";
     }
   });
 
-  // Optional: allow Enter key to submit
-  document.getElementById("passwordInput").addEventListener("keyup", (e) => {
-    if (e.key === "Enter") {
-      document.getElementById("submitBtn").click();
-    }
+  passwordInput.addEventListener("keyup", (e) => {
+    if (e.key === "Enter") submitBtn.click();
+  });
+
+  linkButton.addEventListener("click", () => {
+    window.open("https://sjschools-my.sharepoint.com/:f:/r/personal/s591445_stjohns_k12_fl_us/Documents/Rominate?csf=1&web=1&e=aZRIQX", "_blank");
   });
 </script>
+
+<div id="footer">Rominate™ — Keep it secret, keep it savage.</div>
+
 </body>
 </html>
