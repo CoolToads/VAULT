@@ -6,61 +6,58 @@
 <title>Rominate Vault</title>
 <style>
   body { background: black; color: #0f0; font-family: monospace; text-align: center; padding-top: 100px; }
-  #message { font-size: 1.5em; display: none; white-space: pre-wrap; }
+  #message { font-size: 1.5em; display: none; margin-top: 20px; white-space: pre-wrap; }
+  input[type="password"] {
+    font-size: 1.2em;
+    padding: 10px;
+    width: 300px;
+    background: black;
+    border: 2px solid #0f0;
+    color: #0f0;
+    outline: none;
+    letter-spacing: 2px;
+  }
+  button {
+    font-size: 1.2em;
+    padding: 10px 20px;
+    margin-left: 10px;
+    background: #0f0;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  button:hover {
+    background: #0b0;
+  }
 </style>
 </head>
 <body>
-<h1>Welcome to Rominate Vault</h1>
-<p>Enter the secret key combo to unlock the message.</p>
-<div id="message"></div>
+<h1>Rominate Vault</h1>
+<p>Enter the secret password to unlock the message.</p>
+<input type="password" id="passwordInput" placeholder="Type the secret here" autocomplete="off" />
+<button id="submitBtn">Enter</button>
+
+<div id="message">The thing we did that was not listed in the powerpoint was Jailbreaking/Hacking ChatGPT</div>
 
 <script>
-// Obfuscated message - base64 encoded
-const encodedMsg = "VGhlIHRoaW5nIHdlIGRpZCB0aGF0IHdhcyBub3QgbGlzdGVkIGluIHRoZSBwb3dlcnBvaW50IHdhcyBKYWlsYnJlYWtpbmcvSGFja2luZyBDaGF0R1BUMw==";
+  const password = "ctrl+alt+rominate";
 
-function decodeMessage(str) {
-  return atob(str);
-}
-
-const secretCombo = ['control', 'alt', 'r', 'o', 'm', 'i', 'n', 'a', 't', 'e'];
-let pressedKeys = new Set();
-
-function isDevToolsOpen() {
-  const threshold = 160;
-  let widthThreshold = window.outerWidth - window.innerWidth > threshold;
-  let heightThreshold = window.outerHeight - window.innerHeight > threshold;
-  return widthThreshold || heightThreshold;
-}
-
-// Reload page if DevTools detected open (basic method)
-setInterval(() => {
-  if (isDevToolsOpen()) {
-    location.reload();
-  }
-}, 500);
-
-window.addEventListener('keydown', e => {
-  pressedKeys.add(e.key.toLowerCase());
-  
-  // Check ctrl and alt keys
-  if (e.ctrlKey) pressedKeys.add('control');
-  if (e.altKey) pressedKeys.add('alt');
-
-  // Check if secret combo pressed (all keys present)
-  if (secretCombo.every(k => pressedKeys.has(k))) {
-    const msgDiv = document.getElementById('message');
-    if (msgDiv.style.display === 'none') {
-      msgDiv.textContent = decodeMessage(encodedMsg);
-      msgDiv.style.display = 'block';
+  document.getElementById("submitBtn").addEventListener("click", () => {
+    const input = document.getElementById("passwordInput").value.toLowerCase().trim();
+    if (input === password) {
+      document.getElementById("message").style.display = "block";
+    } else {
+      alert("Wrong password. Try again.");
+      document.getElementById("message").style.display = "none";
     }
-  }
-});
+  });
 
-window.addEventListener('keyup', e => {
-  pressedKeys.delete(e.key.toLowerCase());
-  if (!e.ctrlKey) pressedKeys.delete('control');
-  if (!e.altKey) pressedKeys.delete('alt');
-});
+  // Optional: allow Enter key to submit
+  document.getElementById("passwordInput").addEventListener("keyup", (e) => {
+    if (e.key === "Enter") {
+      document.getElementById("submitBtn").click();
+    }
+  });
 </script>
 </body>
 </html>
